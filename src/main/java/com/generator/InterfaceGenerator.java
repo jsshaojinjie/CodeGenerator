@@ -1,5 +1,6 @@
-package com;
+package com.generator;
 
+import com.config.GlobalConfig;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
@@ -10,13 +11,16 @@ import static com.Generator.*;
 
 public class InterfaceGenerator {
 
+    private GlobalConfig globalConfig;
 
-    public static void generator() throws IOException {
+    public InterfaceGenerator(GlobalConfig globalConfig) {
+        this.globalConfig = globalConfig;
+    }
 
-
-        TypeSpec typeSpec = TypeSpec.interfaceBuilder(serviceName)
+    public void generator() throws IOException {
+        TypeSpec typeSpec = TypeSpec.interfaceBuilder(globalConfig.serviceName)
                 .addModifiers(Modifier.PUBLIC)
-                .addSuperinterface(ParameterizedTypeName.get(mbIServiceClass, entityClass))
+                .addSuperinterface(ParameterizedTypeName.get(globalConfig.mbIServiceClass, globalConfig.entityClass))
                 .addMethod(getEditMethod())
                 .addMethod(getListPagingMethod())
                 .addMethod(getGetEditInfoMethod())
@@ -26,7 +30,7 @@ public class InterfaceGenerator {
 
 
         //生成一个Java文件
-        JavaFile javaFile = JavaFile.builder(servicePathStr, typeSpec)
+        JavaFile javaFile = JavaFile.builder(globalConfig.servicePathStr, typeSpec)
                 .build();
 
         //将java写到当前项目中
@@ -39,12 +43,12 @@ public class InterfaceGenerator {
     }
 
 
-    public static MethodSpec getEditMethod() {
-        ParameterSpec parameterSpec1 = ParameterSpec.builder(editFormNameClass, "form").build();
-        ParameterSpec parameterSpec2 = ParameterSpec.builder(chemicalUserClass, "user").build();
+    public MethodSpec getEditMethod() {
+        ParameterSpec parameterSpec1 = ParameterSpec.builder(globalConfig.editFormNameClass, "form").build();
+        ParameterSpec parameterSpec2 = ParameterSpec.builder(globalConfig.chemicalUserClass, "user").build();
         MethodSpec methodSpec = MethodSpec.methodBuilder("edit")
                 .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
-                .returns(rClass)
+                .returns(globalConfig.rClass)
                 .addParameter(parameterSpec1)
                 .addParameter(parameterSpec2)
                 .build();
@@ -52,12 +56,12 @@ public class InterfaceGenerator {
     }
 
 
-    public static MethodSpec getListPagingMethod() {
-        ParameterSpec parameterSpec1 = ParameterSpec.builder(listPagingFormClass, "form").build();
-        ParameterSpec parameterSpec2 = ParameterSpec.builder(chemicalUserClass, "user").build();
+    public MethodSpec getListPagingMethod() {
+        ParameterSpec parameterSpec1 = ParameterSpec.builder(globalConfig.listPagingFormClass, "form").build();
+        ParameterSpec parameterSpec2 = ParameterSpec.builder(globalConfig.chemicalUserClass, "user").build();
         MethodSpec methodSpec = MethodSpec.methodBuilder("listPaging")
                 .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
-                .returns(rClass)
+                .returns(globalConfig.rClass)
                 .addParameter(parameterSpec1)
                 .addParameter(parameterSpec2)
                 .build();
@@ -65,12 +69,12 @@ public class InterfaceGenerator {
     }
 
 
-    public static MethodSpec getGetEditInfoMethod() {
+    public MethodSpec getGetEditInfoMethod() {
         ParameterSpec parameterSpec1 = ParameterSpec.builder(Integer.class, "id").build();
-        ParameterSpec parameterSpec2 = ParameterSpec.builder(chemicalUserClass, "user").build();
+        ParameterSpec parameterSpec2 = ParameterSpec.builder(globalConfig.chemicalUserClass, "user").build();
         MethodSpec methodSpec = MethodSpec.methodBuilder("getEditInfo")
                 .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
-                .returns(rClass)
+                .returns(globalConfig.rClass)
                 .addParameter(parameterSpec1)
                 .addParameter(parameterSpec2)
                 .build();
@@ -78,12 +82,12 @@ public class InterfaceGenerator {
     }
 
 
-    public static MethodSpec getGetDetailMethod() {
+    public MethodSpec getGetDetailMethod() {
         ParameterSpec parameterSpec1 = ParameterSpec.builder(Integer.class, "id").build();
-        ParameterSpec parameterSpec2 = ParameterSpec.builder(chemicalUserClass, "user").build();
+        ParameterSpec parameterSpec2 = ParameterSpec.builder(globalConfig.chemicalUserClass, "user").build();
         MethodSpec methodSpec = MethodSpec.methodBuilder("getDetail")
                 .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
-                .returns(rClass)
+                .returns(globalConfig.rClass)
                 .addParameter(parameterSpec1)
                 .addParameter(parameterSpec2)
                 .build();
@@ -91,12 +95,12 @@ public class InterfaceGenerator {
     }
 
 
-    public static MethodSpec getDeleteMethod() {
+    public MethodSpec getDeleteMethod() {
         ParameterSpec parameterSpec1 = ParameterSpec.builder(java.util.List.class, "idList").build();
-        ParameterSpec parameterSpec2 = ParameterSpec.builder(chemicalUserClass, "user").build();
+        ParameterSpec parameterSpec2 = ParameterSpec.builder(globalConfig.chemicalUserClass, "user").build();
         MethodSpec methodSpec = MethodSpec.methodBuilder("delete")
                 .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
-                .returns(rClass)
+                .returns(globalConfig.rClass)
                 .addParameter(parameterSpec1)
                 .addParameter(parameterSpec2)
                 .build();

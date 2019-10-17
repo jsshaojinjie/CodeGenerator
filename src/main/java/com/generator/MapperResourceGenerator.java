@@ -30,17 +30,17 @@ public class MapperResourceGenerator {
         DocumentBuilder db = factory.newDocumentBuilder();
         //step3:新建一个Document对象
         Document document = db.newDocument();
-
+        document.setXmlStandalone(true);
 
         DocumentType doctype = document.getImplementation().createDocumentType("doctype", "-//mybatis.org//DTD Mapper 3.0//EN", "http://mybatis.org/dtd/mybatis-3-mapper.dtd");
         Element DOCTYPE = document.createElement("DOCTYPE");
 
         Element mapper = document.createElement("mapper");
-        mapper.setAttribute("namespace", globalConfig.mapperPathStr+"."+globalConfig.mapperName);
+        mapper.setAttribute("namespace", globalConfig.mapperPathStr + "." + globalConfig.mapperName);
 
         Element selectPageList = document.createElement("select");
         selectPageList.setAttribute("id", "selectPageList");
-        selectPageList.setAttribute("resultType", globalConfig.pojoPathStr+"."+globalConfig.pagingInfoName);
+        selectPageList.setAttribute("resultType", globalConfig.pojoPathStr + "." + globalConfig.pagingInfoName);
         selectPageList.setTextContent("select * from " + globalConfig.tableName + " order by id desc");
 
         mapper.appendChild(selectPageList);
@@ -52,7 +52,7 @@ public class MapperResourceGenerator {
         transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
         transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
 
-        Result outputTarget = new StreamResult(new File("." + "\\src\\main\\resources\\mapper\\"+globalConfig.mapperName+".xml"));
+        Result outputTarget = new StreamResult(new File("." + "\\src\\main\\resources\\mapper\\" + globalConfig.mapperName + ".xml"));
         transformer.transform(xmlSource, outputTarget);
 
 

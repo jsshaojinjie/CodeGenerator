@@ -41,7 +41,7 @@ public class MapperResourceGenerator {
         Element selectPageList = document.createElement("select");
         selectPageList.setAttribute("id", "selectPageList");
         selectPageList.setAttribute("resultType", globalConfig.pojoPathStr + "." + globalConfig.pagingInfoName);
-        selectPageList.setTextContent("select * from " + globalConfig.tableName + " order by id desc");
+        selectPageList.setTextContent("select * from " + globalConfig.tableName + " where effective_sign = '0' order by id desc");
 
         mapper.appendChild(selectPageList);
         document.appendChild(mapper);

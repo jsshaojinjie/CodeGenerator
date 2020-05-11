@@ -67,14 +67,23 @@ public class PojoGenerator {
             } else if ("effectiveSign".equals(Util.lineToHump(fieldInfo.getName())) || "createTime".equals(Util.lineToHump(fieldInfo.getName())) || "updateTime".equals(Util.lineToHump(fieldInfo.getName()))) {
                 continue;
             } else {
+
+                String lengthStr = "";
+                if (fieldInfo.getTypeName().equals("varchar")) {
+                    lengthStr = " 长度为" + fieldInfo.getColumnSize();
+                } else if (fieldInfo.getTypeName().equals("text")) {
+                    lengthStr = " 无长度限制";
+                }
+
+
                 fieldSpecBuilder.addAnnotation(
                         AnnotationSpec.builder(globalConfig.sgApiModelPropertyClass)
-                                .addMember("value", "$S", fieldInfo.getComment())
+                                .addMember("value", "$S", fieldInfo.getComment() + lengthStr)
                                 .build()
                 );
                 fieldSpecBuilder.addAnnotation(
                         AnnotationSpec.builder(globalConfig.notNullClass)
-                                .addMember("value", "$S", fieldInfo.getComment() + "不能为空")
+                                .addMember("message", "$S", fieldInfo.getComment() + "不能为空")
                                 .build()
                 );
             }
@@ -119,9 +128,9 @@ public class PojoGenerator {
     public void generatorPagingFormPojo() throws IOException {
         TypeSpec typeSpec = TypeSpec.classBuilder(globalConfig.listPagingFormName)
                 .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(AnnotationSpec.builder(io.swagger.annotations.ApiModel.class)
-                        .addMember("value", "$S", globalConfig.modelDescription + "分页请求参数")
-                        .build())
+//                .addAnnotation(AnnotationSpec.builder(io.swagger.annotations.ApiModel.class)
+//                        .addMember("value", "$S", globalConfig.modelDescription + "分页请求参数")
+//                        .build())
                 .addAnnotation(lombok.Data.class)
                 .addField(java.lang.Integer.class, "companyId", Modifier.PRIVATE)
                 .addField(globalConfig.pageInfoClass, "page", Modifier.PRIVATE)

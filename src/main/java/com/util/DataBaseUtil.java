@@ -4,6 +4,7 @@ import com.pojo.TableFieldInfo;
 import com.pojo.TableInfo;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +37,26 @@ public class DataBaseUtil {
         }
     }
 
+    public static List<TableInfo> getTableInfoList(Connection conn) throws SQLException {
+        List<TableInfo> result = new ArrayList<>();
+        List<String> tableNameList = getTableNameList(conn);
+        for (String name : tableNameList) {
+            result.add(getTableInfo(conn, name));
+        }
+        return result;
+    }
+
+    public static List<String> getTableNameList(Connection conn) throws SQLException {
+        List<String> result = new ArrayList<>();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("show tables");
+        while (rs.next()) {
+            result.add(rs.getString(1));
+        }
+        return result;
+    }
+
+
     public static TableInfo getTableInfo(Connection conn, String tableName) {
         List<TableFieldInfo> fieldInfoList = new ArrayList<>();
         try {
@@ -46,6 +67,8 @@ public class DataBaseUtil {
             for (int i = 0; i < rsmd.getColumnCount(); i++) {
                 String name = rsmd.getColumnName(i + 1);
                 String typeName = rsmd.getColumnTypeName(i + 1);
+                int columnSize = rsmd.getColumnDisplaySize(i + 1);
+                int isNullable = rsmd.isNullable(i + 1);
                 Class typeClass = null;
                 switch (typeName) {
                     case "INT": {
@@ -57,6 +80,7 @@ public class DataBaseUtil {
                         break;
                     }
                     case "BIT": {
+                        typeName = "tinyint";
                         typeClass = Integer.class;
                         break;
                     }
@@ -64,16 +88,28 @@ public class DataBaseUtil {
                         typeClass = LocalDateTime.class;
                         break;
                     }
+                    case "DATE": {
+                        typeClass = LocalDate.class;
+                        break;
+                    }
+                    default: {
+                        typeClass = String.class;
+                        break;
+                    }
                 }
+                if (typeName.equals("TEXT") || typeName.equals("DATETIME") || typeName.equals("DATE")) {
+                    columnSize = 0;
+                }
+
                 String comment = fieldCommentMap.containsKey(name) ? fieldCommentMap.get(name) : null;
-                comment = comment.replace("\n","").replace("\r"," ");
-                fieldInfoList.add(new TableFieldInfo(name, typeName, typeClass, comment));
+                comment = comment.replace("\n", "").replace("\r", " ");
+                fieldInfoList.add(new TableFieldInfo(name, typeName.toLowerCase(), typeClass, comment, columnSize, isNullable));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         String tableComment = getTableComment(conn, tableName);
-        return new TableInfo().builder().fieldInfoList(fieldInfoList).comment(tableComment).build();
+        return new TableInfo().builder().tableName(tableName).fieldInfoList(fieldInfoList).comment(tableComment).build();
     }
 
 

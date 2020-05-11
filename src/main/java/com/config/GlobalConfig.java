@@ -75,14 +75,14 @@ public class GlobalConfig {
     public static ClassName localDateTimeClass = ClassName.get("java.time", "LocalDateTime");
     public static ClassName beanUtilsClass = ClassName.get("org.springframework.beans", "BeanUtils");
     public static ClassName sgApiModelPropertyClass = ClassName.get("io.swagger.annotations", "ApiModelProperty");
-    public static ClassName notNullClass = ClassName.get("io.swagger.annotations", "ApiModelProperty");
+    public static ClassName notNullClass = ClassName.get("javax.validation.constraints", "NotNull");
 
 
-    public GlobalConfig(String tableName) {
+    public GlobalConfig(String tableName, String packagePathStr) {
         this.tableName = tableName;
 
         this.modelName = toUpperCaseFirstOne(Util.lineToHump(tableName));
-        this.packagePathStr = "com.tdgroup.chemical.riskhidden";
+        this.packagePathStr = packagePathStr;
 
         this.entityPathStr = packagePathStr + ".entity";
         this.pojoPathStr = packagePathStr + ".pojo." + modelName.toLowerCase();

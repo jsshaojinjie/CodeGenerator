@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class TableInfo {
+    private String tableName;
     private List<TableFieldInfo> fieldInfoList;
     private String comment;
 }

@@ -32,7 +32,7 @@ public class ControllerGenerator {
                         .addMember("value", "$S", Util.toLowerCaseFirstOne(globalConfig.modelName))
                         .build())
                 .addAnnotation(AnnotationSpec.builder(io.swagger.annotations.Api.class)
-                        .addMember("description", "$S", globalConfig.modelDescription + "模块")
+                        .addMember("tag", "$S", globalConfig.modelDescription + "模块")
                         .build())
                 .addAnnotation(lombok.AllArgsConstructor.class)
                 .addField(globalConfig.serviceClass, globalConfig.serviceImplFieldName, Modifier.PRIVATE, Modifier.FINAL)

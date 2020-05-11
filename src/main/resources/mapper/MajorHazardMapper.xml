@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tdgroup.chemical.riskhidden.mapper.MajorHazardMapper"><select id="selectPageList" resultType="com.tdgroup.chemical.riskhidden.pojo.majorhazard.MajorHazardPagingInfo">select * from major_hazard where effective_sign = '0' order by id desc</select></mapper>
